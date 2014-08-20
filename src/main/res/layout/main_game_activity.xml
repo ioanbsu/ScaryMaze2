@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:id="@+id/gameMainLayout"
+                android:layout_height="match_parent">
+
+         <fragment android:layout_width="fill_parent" android:layout_height="wrap_content"
+                   android:name="com.artigile.android.game.StartGameFragment"
+                   android:layout_centerVertical="true"
+                   android:layout_margin="20dp"
+                   tools:layout="@layout/game_start_fragment"/>
+</RelativeLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme" parent="android:Theme">
+    </style>
+
+    <style name="Theme.TutorialDescriptionText">
+        <item name="android:textColor">#333333</item>
+    </style>
+
+    <style name="Theme.LinkStyle">
+        <item name="android:textColor">#ff9ba8ff</item>
+    </style>
+
+</resources>

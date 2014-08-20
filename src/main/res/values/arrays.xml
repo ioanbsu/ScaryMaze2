@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="gameLevel">
+        <item name="1">Easy</item>
+        <item name="2">Medium</item>
+        <item name="3">Hard</item>
+        <item name="4">Nightmare</item>
+    </string-array>
+    <string-array name="gameLevelValues">
+        <item name="1">0.5</item>
+        <item name="2">1</item>
+        <item name="3">1.5</item>
+        <item name="4">3</item>
+    </string-array>
+    <string-array name="wallsBounce">
+        <item name="1">Zero bounce</item>
+        <item name="2">Light bounce</item>
+        <item name="3">Real Life</item>
+        <item name="4">Rocket</item>
+    </string-array>
+    <string-array name="wallsBounceLevel">
+        <item name="1">0.1</item>
+        <item name="2">0.5</item>
+        <item name="3">0.8</item>
+        <item name="4">1</item>
+    </string-array>
+
+</resources>

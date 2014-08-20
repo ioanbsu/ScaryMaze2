@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+            android:title="Game Settings"
+            android:key="game_settings">
+        <EditTextPreference
+                android:title="Scary Level"
+                android:summary="Level where scary face appears"
+                android:defaultValue="2"
+                android:inputType="numberDecimal"
+                android:key="prefScaryLevel"/>
+        <ListPreference
+                android:key="prefComplexityLevel"
+                android:entries="@array/gameLevel"
+                android:defaultValue="2"
+                android:summary="Adjust game complexity "
+                android:entryValues="@array/gameLevelValues"
+                android:title="Complexity" />
+        <ListPreference
+                android:key="prefWallsBounceLevel"
+                android:entries="@array/wallsBounce"
+                android:defaultValue="2"
+                android:summary="Define walls softness"
+                android:entryValues="@array/wallsBounceLevel"
+                android:title="Walls Bounce" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="Other"
+            android:key="other_settings">
+        <CheckBoxPreference
+                android:key="prefRecordVideo"
+                android:title="Record Video"
+                android:summary="Disable/enable video recording of player"
+                android:defaultValue="true"/>
+        <CheckBoxPreference
+                android:key="prefDisplayTutorial"
+                android:title="Display Tutorial"
+                android:summary="Display tutorial when game started"
+                android:defaultValue="true"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

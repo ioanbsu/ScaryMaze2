@@ -1,0 +1,28 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.2'
+    }
+}
+
+
+apply plugin: 'android'
+android {
+    compileSdkVersion 20
+    buildToolsVersion '20.0.0'
+    defaultConfig {}
+    productFlavors {}
+    buildTypes {}
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "com.android.support:support-v4:20.0.+",
+            "com.google.guava:guava:17.0-rc2"
+}
