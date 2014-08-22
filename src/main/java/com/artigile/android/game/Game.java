@@ -7,9 +7,9 @@ public interface Game {
 
     void start();
 
-    void stop();
+    void reset();
 
-    void pause();
+    void resetLevel();
 
     void scary();
 

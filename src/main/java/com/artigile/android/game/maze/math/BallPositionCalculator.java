@@ -1,6 +1,6 @@
-package com.artigile.android.math;
+package com.artigile.android.game.maze.math;
 
-import com.artigile.android.model.Ball;
+import com.artigile.android.game.maze.model.Ball;
 
 /**
  * @author ivanbahdanau

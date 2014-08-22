@@ -24,6 +24,13 @@
                 android:summary="Define walls softness"
                 android:entryValues="@array/wallsBounceLevel"
                 android:title="Walls Bounce" />
+        <ListPreference
+                android:key="prefGameMode"
+                android:entries="@array/gameMode"
+                android:defaultValue="RESTART"
+                android:summary="Change game mode"
+                android:entryValues="@array/gameModeValue"
+                android:title="Game Mode" />
     </PreferenceCategory>
 
     <PreferenceCategory

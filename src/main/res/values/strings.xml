@@ -23,4 +23,17 @@
 
     <!--videos-->
     <string name="videos_menu_text">Videos</string>
+
+    <!--game-->
+    <string name="end_game_message">Sorry for scaring you… You can smile now:) you\'ve accomplished the game:) Check the
+        /sdcard/Movies/MagicMaze folder</string>
+    <string name="game_end_close_button">Close</string>
+
+
+
+    <string name="continue_game">Continue</string>
+    <string name="well_done_continue_text">Well Done!</string>
+    <string name="failed_label">Failed :(</string>
+    <string name="try_again_button">Try Again</string>
+    <string name="restart_button">Restart</string>
 </resources>

@@ -1,12 +1,14 @@
 package com.artigile.android.game;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.app.AlertDialog;
+import android.content.*;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
@@ -24,7 +26,9 @@ public class GameActivity extends FragmentActivity {
 
     private GameView magicMazeView;
     private LinearLayout startPanel;
-
+    private LinearLayout continuePanel;
+    private LinearLayout gameFailPanel;
+    private BroadcastReceiver eventsReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,27 +36,34 @@ public class GameActivity extends FragmentActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.main_game_activity);
         startPanel = (LinearLayout) findViewById(R.id.gameStartPanel);
+        continuePanel = (LinearLayout) findViewById(R.id.gameContinuePanel);
+        gameFailPanel = (LinearLayout) findViewById(R.id.gameFailPanel);
+        eventsReceiver = initBraodcastReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(eventsReceiver, new IntentFilter(Constants.GAME_EVENT));
+        magicMazeView = new MagicMazeView(this);
+        registerForContextMenu(magicMazeView);
+        initListeners();
+
+        displayPopup(PopupType.START_GAME);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        magicMazeView = new MagicMazeView(this);
-
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.gameMainLayout);
-        relativeLayout.addView(magicMazeView, 0);
-        registerForContextMenu(magicMazeView);
-        initListeners();
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        //re-reading settings data every time user returns back to game
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         magicMazeView.setGameSettings(sharedPref);
-        magicMazeView.stopGame();
         toggleHideyBar();
+
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.gameMainLayout);
+        relativeLayout.addView(magicMazeView, 0);
+
+        resetGame();
     }
 
     @Override
@@ -71,14 +82,33 @@ public class GameActivity extends FragmentActivity {
             case R.id.show_videos:
 
                 return true;
-            case R.id.stop_game:
-                magicMazeView.stopGame();
-                startPanel.setVisibility(View.VISIBLE);
+            case R.id.reset_game:
+                resetGame();
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.gameMainLayout);
+        relativeLayout.removeViewInLayout(magicMazeView);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //todo: process onStop!!!
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(eventsReceiver);
+        super.onDestroy();
     }
 
     private void showSettings() {
@@ -94,18 +124,100 @@ public class GameActivity extends FragmentActivity {
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                startPanel.setVisibility(View.GONE);
+                displayPopup(PopupType.NONE);
                 magicMazeView.startGame();
             }
         });
-        findViewById(R.id.settingsLink).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.continueGameButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                displayPopup(PopupType.NONE);
+                magicMazeView.startGame();
+                findViewById(R.id.continueText).setVisibility(View.GONE);
+            }
+        });
+        findViewById(R.id.settingsButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSettings();
             }
         });
+        findViewById(R.id.tryAgainButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                magicMazeView.startGame();
+                displayPopup(PopupType.NONE);
+            }
+        });
+        findViewById(R.id.restartGameButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetGame();
+            }
+        });
+
+
     }
 
+
+    private BroadcastReceiver initBraodcastReceiver() {
+        return new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (GameEvents.LEVEL_DONE.toString().equals(intent.getStringExtra(Constants.EVENT_TYPE))) {
+                    findViewById(R.id.continueText).setVisibility(View.VISIBLE);
+                    displayPopup(PopupType.CONTINUTE_GAME);
+                }
+                if (GameEvents.BALL_LEFT_MAZE.toString().equals(intent.getStringExtra(Constants.EVENT_TYPE))) {
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(GameActivity.this);
+                    String gameMode = sharedPref.getString("prefGameMode", "RESTART");
+                    if (Constants.GAME_MODE_RESTART.equals(gameMode)) {
+                        magicMazeView.resetLevel();
+                        displayPopup(PopupType.CONTINUE_AFTER_FAIL);
+                    }
+                    if (Constants.GAME_MODE_EASY.equals(gameMode)) {
+                        ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(300);
+                    }
+                }
+                if (GameEvents.SCARED.toString().equals(intent.getStringExtra(Constants.EVENT_TYPE))) {
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            new AlertDialog.Builder(GameActivity.this)
+                                    .setTitle(R.string.app_name)
+                                    .setMessage(R.string.end_game_message)
+                                    .setIcon(R.drawable.smile)
+                                    .setPositiveButton(R.string.game_end_close_button, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            GameActivity.this.stopService(new Intent(GameActivity.this, RecorderService.class));
+                                            magicMazeView.resetGame();
+                                            displayPopup(PopupType.START_GAME);
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }, 5000);
+                }
+                if (GameEvents.SCARED_LEVEL_STARTS.toString().equals(intent.getStringExtra(Constants.EVENT_TYPE))) {
+                    Intent recordIntent = new Intent(context, RecorderService.class);
+                    recordIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startService(recordIntent);
+                }
+            }
+        };
+    }
+
+    private void resetGame() {
+        magicMazeView.resetGame();
+        displayPopup(PopupType.START_GAME);
+    }
+
+    private void displayPopup(PopupType popupType) {
+        gameFailPanel.setVisibility(popupType == PopupType.CONTINUE_AFTER_FAIL ? View.VISIBLE : View.GONE);
+        startPanel.setVisibility(popupType == PopupType.START_GAME ? View.VISIBLE : View.GONE);
+        continuePanel.setVisibility(popupType == PopupType.CONTINUTE_GAME ? View.VISIBLE : View.GONE);
+    }
 
     /**
      * Detects and toggles immersive mode (also known as "hidey bar" mode).
@@ -147,5 +259,12 @@ public class GameActivity extends FragmentActivity {
         }
 
         getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+    }
+
+    private static enum PopupType {
+        START_GAME,
+        CONTINUTE_GAME,
+        CONTINUE_AFTER_FAIL,
+        NONE;
     }
 }

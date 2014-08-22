@@ -12,4 +12,9 @@
         <item name="android:textColor">#ff9ba8ff</item>
     </style>
 
+
+    <style name="Theme.RedFont">
+        <item name="android:textColor">#EE1111</item>
+    </style>
+
 </resources>

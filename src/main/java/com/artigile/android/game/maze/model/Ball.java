@@ -1,21 +1,21 @@
-package com.artigile.android.model;
+package com.artigile.android.game.maze.model;
 
 /**
  * @author ivanbahdanau
  */
 public class Ball {
 
-    private float x;
+    private int radius = 40;
 
-    private float y;
+    private float x = radius;
+
+    private float y = radius;
 
     private float velocityX;
 
     private float velocityY;
 
     private long time;
-
-    private int radius = 40;
 
     public float getX() {
         return x;

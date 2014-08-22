@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
-import android.view.View;
 
 /**
  * @author ivanbahdanau
@@ -24,7 +23,9 @@ public abstract class GameView extends SurfaceView {
 
     public abstract void startGame();
 
-    public abstract void stopGame();
+    public abstract void resetGame();
 
-    public abstract     void setGameSettings(SharedPreferences sharedPref);
+    public abstract void resetLevel();
+
+    public abstract void setGameSettings(SharedPreferences sharedPref);
 }

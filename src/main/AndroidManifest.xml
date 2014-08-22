@@ -13,7 +13,7 @@
             </intent-filter>
         </activity>
         <activity android:screenOrientation="reverseLandscape" android:name=".tutorial.TutorialActivity"
-                  android:launchMode="standard"
+                  android:launchMode="singleInstance"
                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 
         </activity>
@@ -27,6 +27,7 @@
                 android:name=".preferences.ScaryMazePreferencesActivity"
                 android:label="@string/scary_maze_settings_activity_title">
         </activity>
+        <service android:name=".game.RecorderService"/>
     </application>
 
     <supports-screens android:anyDensity="true"
