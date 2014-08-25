@@ -25,8 +25,7 @@
     <string name="videos_menu_text">Videos</string>
 
     <!--game-->
-    <string name="end_game_message">Sorry for scaring you… You can smile now:) you\'ve accomplished the game:) Check the
-        /sdcard/Movies/MagicMaze folder</string>
+    <string name="end_game_message">Sorry for scaring you… You can smile now:) you\'ve accomplished the game:) Check videos by touching screen and holding until you see menu.</string>
     <string name="game_end_close_button">Close</string>
 
 

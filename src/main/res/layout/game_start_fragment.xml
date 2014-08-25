@@ -15,17 +15,6 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="fill_parent" android:gravity="center_horizontal">
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/enter_name"
-                android:id="@+id/name"/>
-        <EditText
-                android:layout_width="wrap_content"
-                android:width="80pt"
-                android:layout_height="wrap_content"
-                android:id="@+id/userName"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

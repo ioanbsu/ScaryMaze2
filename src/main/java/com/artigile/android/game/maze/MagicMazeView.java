@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.preference.PreferenceManager;
 import android.view.SurfaceHolder;
 import com.artigile.android.game.Game;
 import com.artigile.android.game.GameView;
@@ -34,7 +35,9 @@ public class MagicMazeView extends GameView implements SurfaceHolder.Callback {
 
     @Override
     public void startGame() {
-        if (mazeGame.isScaryLevel()) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean recordVideo = sharedPref.getBoolean("prefRecordVideo", false);
+        if (mazeGame.isScaryLevel() && recordVideo) {
             Intent recordIntent = new Intent(context, RecorderService.class);
             recordIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startService(recordIntent);

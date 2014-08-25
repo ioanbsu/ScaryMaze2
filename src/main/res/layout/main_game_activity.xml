@@ -18,9 +18,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true" android:layout_centerHorizontal="true">
     </SurfaceView>
-    <fragment android:layout_width="fill_parent" android:layout_height="wrap_content"
+    <fragment android:layout_width="wrap_content" android:layout_height="wrap_content"
               android:name="com.artigile.android.game.StartGameFragment"
               android:layout_centerVertical="true"
+              android:layout_centerHorizontal="true"
               android:layout_margin="20dp"
               tools:layout="@layout/game_start_fragment"/>
 
