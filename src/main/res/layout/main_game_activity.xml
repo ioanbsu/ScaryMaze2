@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:id="@+id/gameMainLayout"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                android:id="@+id/gameMainLayout"
                 android:layout_height="match_parent">
 
-         <fragment android:layout_width="fill_parent" android:layout_height="wrap_content"
-                   android:name="com.artigile.android.game.StartGameFragment"
-                   android:layout_centerVertical="true"
-                   android:layout_margin="20dp"
-                   tools:layout="@layout/game_start_fragment"/>
 
-         <fragment android:layout_width="wrap_content" android:layout_height="wrap_content"
-                   android:name="com.artigile.android.game.ContinueGameFragment"
-                   tools:layout="@layout/game_continue_fragment"
-                   android:layout_centerVertical="true"
-                   android:layout_centerHorizontal="true"/>
-
-         <fragment android:layout_width="wrap_content" android:layout_height="wrap_content"
-                   android:name="com.artigile.android.game.ContinueAfterFailFragment"
-                   tools:layout="@layout/game_failed_fragment"
-                   android:layout_centerVertical="true"
-                   android:layout_centerHorizontal="true"/>
-
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/gameMainView"
+            android:layout_alignParentTop="true">
+    </RelativeLayout>
     <SurfaceView
             android:id="@+id/cameraRecordPreview"
             android:layout_width="wrap_content"
-            android:visibility="gone"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" android:layout_centerHorizontal="true">
     </SurfaceView>
+    <fragment android:layout_width="fill_parent" android:layout_height="wrap_content"
+              android:name="com.artigile.android.game.StartGameFragment"
+              android:layout_centerVertical="true"
+              android:layout_margin="20dp"
+              tools:layout="@layout/game_start_fragment"/>
+
+    <fragment android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:name="com.artigile.android.game.ContinueGameFragment"
+              tools:layout="@layout/game_continue_fragment"
+              android:layout_centerVertical="true"
+              android:layout_centerHorizontal="true" android:id="@+id/fragment"/>
+
+    <fragment android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:name="com.artigile.android.game.ContinueAfterFailFragment"
+              tools:layout="@layout/game_failed_fragment"
+              android:layout_centerVertical="true"
+              android:layout_centerHorizontal="true" android:id="@+id/fragment2"/>
+
+
 </RelativeLayout>

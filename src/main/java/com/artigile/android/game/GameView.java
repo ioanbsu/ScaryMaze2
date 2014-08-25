@@ -28,4 +28,8 @@ public abstract class GameView extends SurfaceView {
     public abstract void resetLevel();
 
     public abstract void setGameSettings(SharedPreferences sharedPref);
+
+    public abstract boolean isGameInProgress();
+
+    public abstract void pause();
 }

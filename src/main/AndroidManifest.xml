@@ -4,7 +4,7 @@
 
     <application android:icon="@drawable/icon" android:label="@string/app_name"
                  android:name=".MazeApp" android:hardwareAccelerated="true">
-        <activity android:screenOrientation="reverseLandscape" android:name=".MainActivity"
+        <activity android:screenOrientation="landscape" android:name=".MainActivity"
                   android:launchMode="standard"
                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
@@ -12,17 +12,19 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:screenOrientation="reverseLandscape" android:name=".tutorial.TutorialActivity"
-                  android:launchMode="singleInstance"
+        <activity android:screenOrientation="landscape" android:name=".tutorial.TutorialActivity"
+                  android:launchMode="standard"
                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 
         </activity>
-
-        <activity android:screenOrientation="reverseLandscape" android:name=".game.GameActivity"
+        <activity android:screenOrientation="landscape" android:name=".game.GameActivity"
                   android:launchMode="standard"
                   android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
         </activity>
-
+        <activity android:screenOrientation="landscape" android:name=".game.VideosActivity"
+                  android:launchMode="standard"
+                  android:theme="@style/Theme.ListFont">
+        </activity>
         <activity
                 android:name=".preferences.ScaryMazePreferencesActivity"
                 android:label="@string/scary_maze_settings_activity_title">

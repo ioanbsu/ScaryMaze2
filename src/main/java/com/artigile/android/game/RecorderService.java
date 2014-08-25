@@ -22,7 +22,7 @@ import java.util.List;
 public class RecorderService extends Service {
     private static final String TAG = "RecorderService";
     private Camera camera;
-    private boolean isRecording;
+    private static boolean isRecording;
     private MediaRecorder mMediaRecorder;
 
     @Override
@@ -59,6 +59,7 @@ public class RecorderService extends Service {
     }
 
     private void startRecording() {
+        System.out.println("STARTING RECORDING=================================");
         if (!isRecording) {
             if (prepareVideoRecorder()) {
                 try {
@@ -146,13 +147,17 @@ public class RecorderService extends Service {
     }
 
     private void stopRecording() {
+        System.out.println("Stopping recording-===========================================");
         if (isRecording) {
-            // stop recording and release camera
-            mMediaRecorder.stop();  // stop the recording
-            releaseMediaRecorder(); // release the MediaRecorder object
-            camera.lock();         // take camera access back from MediaRecorder
-
-            isRecording = false;
+            try {
+                // stop recording and release camera
+                mMediaRecorder.stop();  // stop the recording
+                releaseMediaRecorder(); // release the MediaRecorder object
+                camera.lock();         // take camera access back from MediaRecorder
+                isRecording = true;
+            } catch (Exception e) {
+                isRecording = false;
+            }
         }
     }
 

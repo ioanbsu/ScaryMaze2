@@ -1,12 +1,14 @@
 package com.artigile.android.game.maze;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.view.SurfaceHolder;
+import com.artigile.android.game.Game;
 import com.artigile.android.game.GameView;
-import com.artigile.android.game.SurfaceHolderContainer;
+import com.artigile.android.game.RecorderService;
 
 /**
  * @author ivanbahdanau
@@ -15,11 +17,13 @@ public class MagicMazeView extends GameView implements SurfaceHolder.Callback {
 
     private SensorManager mSensorManager;
 
-    private MazeGame mazeGame;
+    private Game mazeGame;
+    private Context context;
 
 
     public MagicMazeView(Context context) {
         super(context);
+        this.context = context;
         mazeGame = new MazeGame(getHolder(), context);
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mazeGame, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
@@ -30,6 +34,11 @@ public class MagicMazeView extends GameView implements SurfaceHolder.Callback {
 
     @Override
     public void startGame() {
+        if (mazeGame.isScaryLevel()) {
+            Intent recordIntent = new Intent(context, RecorderService.class);
+            recordIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startService(recordIntent);
+        }
         mazeGame.start();
     }
 
@@ -49,6 +58,16 @@ public class MagicMazeView extends GameView implements SurfaceHolder.Callback {
     }
 
     @Override
+    public boolean isGameInProgress() {
+        return mazeGame.isGameInProgress();
+    }
+
+    @Override
+    public void pause() {
+        mazeGame.pause();
+    }
+
+    @Override
     public boolean showContextMenu() {
         return super.showContextMenu();
     }
@@ -62,18 +81,15 @@ public class MagicMazeView extends GameView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         mazeGame.draw();
-        SurfaceHolderContainer.setSurfaceHolder(holder);
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        SurfaceHolderContainer.setSurfaceHolder(holder);
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         mazeGame.resetLevel();
-        SurfaceHolderContainer.setSurfaceHolder(null);
     }
 
     @Override

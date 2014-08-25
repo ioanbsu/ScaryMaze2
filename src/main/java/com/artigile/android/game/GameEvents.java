@@ -6,6 +6,5 @@ package com.artigile.android.game;
 public enum GameEvents {
     LEVEL_DONE,
     BALL_LEFT_MAZE,
-    SCARED,
-    SCARED_LEVEL_STARTS;
+    SCARED
 }

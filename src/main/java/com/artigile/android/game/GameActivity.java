@@ -2,6 +2,8 @@ package com.artigile.android.game;
 
 import android.app.AlertDialog;
 import android.content.*;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,7 +30,12 @@ public class GameActivity extends FragmentActivity {
     private LinearLayout startPanel;
     private LinearLayout continuePanel;
     private LinearLayout gameFailPanel;
-    private BroadcastReceiver eventsReceiver;
+    private BroadcastReceiver levelDoneReceiver;
+    private BroadcastReceiver ballLeftMazeReceiver;
+    private BroadcastReceiver scareMeReceiver;
+
+    private SoundPool soundPool;
+    private int soundId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +45,26 @@ public class GameActivity extends FragmentActivity {
         startPanel = (LinearLayout) findViewById(R.id.gameStartPanel);
         continuePanel = (LinearLayout) findViewById(R.id.gameContinuePanel);
         gameFailPanel = (LinearLayout) findViewById(R.id.gameFailPanel);
-        eventsReceiver = initBraodcastReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(eventsReceiver, new IntentFilter(Constants.GAME_EVENT));
+        levelDoneReceiver = initLevelDoneReceiver();
+        ballLeftMazeReceiver = initBallLeftMazeReceiver();
+        scareMeReceiver = initScaredMazeReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(levelDoneReceiver, new IntentFilter(GameEvents.LEVEL_DONE.toString()));
+        LocalBroadcastManager.getInstance(this).registerReceiver(ballLeftMazeReceiver, new IntentFilter(GameEvents.BALL_LEFT_MAZE.toString()));
+        LocalBroadcastManager.getInstance(this).registerReceiver(scareMeReceiver, new IntentFilter(GameEvents.SCARED.toString()));
         magicMazeView = new MagicMazeView(this);
         registerForContextMenu(magicMazeView);
         initListeners();
 
+        ((RelativeLayout) findViewById(R.id.gameMainView)).addView(magicMazeView, 0);
+
         displayPopup(PopupType.START_GAME);
+
+        soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 100);
+        soundId = soundPool.load(this, R.raw.scary, 1);
+        SurfaceHolderContainer.setSurfaceHolder(((SurfaceView) findViewById(R.id.cameraRecordPreview)).getHolder());
+
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
     }
 
     @Override
@@ -59,11 +79,11 @@ public class GameActivity extends FragmentActivity {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         magicMazeView.setGameSettings(sharedPref);
         toggleHideyBar();
-
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.gameMainLayout);
-        relativeLayout.addView(magicMazeView, 0);
-
-        resetGame();
+        if (magicMazeView.isGameInProgress()) {
+            displayPopup(PopupType.CONTINUTE_GAME);
+        } else {
+            resetGame();
+        }
     }
 
     @Override
@@ -80,7 +100,9 @@ public class GameActivity extends FragmentActivity {
                 showSettings();
                 return true;
             case R.id.show_videos:
-
+                Intent intent = new Intent();
+                intent.setClass(GameActivity.this, VideosActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.reset_game:
                 resetGame();
@@ -94,21 +116,26 @@ public class GameActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.gameMainLayout);
-        relativeLayout.removeViewInLayout(magicMazeView);
+        GameActivity.this.stopService(new Intent(GameActivity.this, RecorderService.class));
+        magicMazeView.pause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        //todo: process onStop!!!
+        GameActivity.this.stopService(new Intent(GameActivity.this, RecorderService.class));
     }
 
     @Override
     protected void onDestroy() {
         // Unregister since the activity is about to be closed.
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(eventsReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(levelDoneReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(ballLeftMazeReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(scareMeReceiver);
+        resetGame();
+        GameActivity.this.stopService(new Intent(GameActivity.this, RecorderService.class));
         super.onDestroy();
+
     }
 
     private void showSettings() {
@@ -135,7 +162,6 @@ public class GameActivity extends FragmentActivity {
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 displayPopup(PopupType.NONE);
                 magicMazeView.startGame();
-                findViewById(R.id.continueText).setVisibility(View.GONE);
             }
         });
         findViewById(R.id.settingsButton).setOnClickListener(new View.OnClickListener() {
@@ -162,48 +188,54 @@ public class GameActivity extends FragmentActivity {
     }
 
 
-    private BroadcastReceiver initBraodcastReceiver() {
+    private BroadcastReceiver initLevelDoneReceiver() {
         return new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (GameEvents.LEVEL_DONE.toString().equals(intent.getStringExtra(Constants.EVENT_TYPE))) {
                     findViewById(R.id.continueText).setVisibility(View.VISIBLE);
                     displayPopup(PopupType.CONTINUTE_GAME);
+
+            }
+        };
+    }
+
+    private BroadcastReceiver initBallLeftMazeReceiver() {
+        return new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(GameActivity.this);
+                String gameMode = sharedPref.getString("prefGameMode", Constants.GAME_MODE_RESTART);
+                if (Constants.GAME_MODE_RESTART.equals(gameMode)) {
+                    magicMazeView.resetLevel();
+                    displayPopup(PopupType.CONTINUE_AFTER_FAIL);
                 }
-                if (GameEvents.BALL_LEFT_MAZE.toString().equals(intent.getStringExtra(Constants.EVENT_TYPE))) {
-                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(GameActivity.this);
-                    String gameMode = sharedPref.getString("prefGameMode", "RESTART");
-                    if (Constants.GAME_MODE_RESTART.equals(gameMode)) {
-                        magicMazeView.resetLevel();
-                        displayPopup(PopupType.CONTINUE_AFTER_FAIL);
+                if (Constants.GAME_MODE_EASY.equals(gameMode)) {
+                    ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(300);
+                }
+            }
+        };
+    }
+
+    private BroadcastReceiver initScaredMazeReceiver() {
+        return new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                soundPool.play(soundId, 1, 1, 99999, 0, 1);
+                ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(1000);
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        new AlertDialog.Builder(GameActivity.this)
+                                .setTitle(R.string.app_name)
+                                .setMessage(R.string.end_game_message)
+                                .setIcon(R.drawable.smile)
+                                .setPositiveButton(R.string.game_end_close_button, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        resetGame();
+                                    }
+                                })
+                                .show();
                     }
-                    if (Constants.GAME_MODE_EASY.equals(gameMode)) {
-                        ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(300);
-                    }
-                }
-                if (GameEvents.SCARED.toString().equals(intent.getStringExtra(Constants.EVENT_TYPE))) {
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
-                            new AlertDialog.Builder(GameActivity.this)
-                                    .setTitle(R.string.app_name)
-                                    .setMessage(R.string.end_game_message)
-                                    .setIcon(R.drawable.smile)
-                                    .setPositiveButton(R.string.game_end_close_button, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            GameActivity.this.stopService(new Intent(GameActivity.this, RecorderService.class));
-                                            magicMazeView.resetGame();
-                                            displayPopup(PopupType.START_GAME);
-                                        }
-                                    })
-                                    .show();
-                        }
-                    }, 5000);
-                }
-                if (GameEvents.SCARED_LEVEL_STARTS.toString().equals(intent.getStringExtra(Constants.EVENT_TYPE))) {
-                    Intent recordIntent = new Intent(context, RecorderService.class);
-                    recordIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startService(recordIntent);
-                }
+                }, 5000);
             }
         };
     }
@@ -211,6 +243,7 @@ public class GameActivity extends FragmentActivity {
     private void resetGame() {
         magicMazeView.resetGame();
         displayPopup(PopupType.START_GAME);
+        GameActivity.this.stopService(new Intent(GameActivity.this, RecorderService.class));
     }
 
     private void displayPopup(PopupType popupType) {

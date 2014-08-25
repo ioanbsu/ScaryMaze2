@@ -36,4 +36,6 @@
     <string name="failed_label">Failed :(</string>
     <string name="try_again_button">Try Again</string>
     <string name="restart_button">Restart</string>
+    <string name="videos_list">Videos List</string>
+    <string name="play_again">Play Again</string>
 </resources>

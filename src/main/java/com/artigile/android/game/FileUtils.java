@@ -20,8 +20,6 @@ public class FileUtils {
     public static File getOutputMediaFile() {
         File mediaStorageDir = getMagicMazeVideosDir();
         if (mediaStorageDir == null) return null;
-
-
         // Create a media file name
         File mediaFile;
         String filePath = mediaStorageDir.getPath() + File.separator + "/" + "blablabla".replace(" ", "_")

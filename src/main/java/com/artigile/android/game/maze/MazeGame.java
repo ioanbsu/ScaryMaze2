@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.*;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextPaint;
 import android.view.SurfaceHolder;
@@ -14,7 +13,6 @@ import com.artigile.android.R;
 import com.artigile.android.game.Constants;
 import com.artigile.android.game.Game;
 import com.artigile.android.game.GameEvents;
-import com.artigile.android.game.RecorderService;
 import com.artigile.android.game.maze.math.BallPositionCalculator;
 import com.artigile.android.game.maze.model.Ball;
 
@@ -27,7 +25,7 @@ import java.util.concurrent.*;
  *
  * @author ivanbahdanau
  */
-public class MazeGame implements Callable<Boolean>, SensorEventListener, Game {
+public class MazeGame implements Callable<Boolean>, Game {
 
     private static final Ball ball = new Ball();
     private static final Paint defaultBackgroundColor = new Paint();
@@ -63,9 +61,10 @@ public class MazeGame implements Callable<Boolean>, SensorEventListener, Game {
         mazeBackground = new Paint(Paint.ANTI_ALIAS_FLAG);
         BitmapShader shader = new BitmapShader(BitmapFactory.decodeResource(context.getResources(), R.drawable.wood), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
         mazeBackground.setShader(shader);
-        scaryFaceBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.smile);
+        scaryFaceBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.scary);
     }
 
+    @Override
     public void setScreenSize(int screenWidth, int screenHeight) {
         this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
@@ -84,7 +83,6 @@ public class MazeGame implements Callable<Boolean>, SensorEventListener, Game {
      */
     @Override
     public Boolean call() throws Exception {
-        Intent intent = new Intent(Constants.GAME_EVENT);
         while (!isLevelCompleted() && run) {
             ballPositionCalculator.calculatePosition(ball, accelerationX, accelerationY);
             //limit frame rate to max 60fps
@@ -92,14 +90,14 @@ public class MazeGame implements Callable<Boolean>, SensorEventListener, Game {
             final boolean timeToScary = currentLevel >= scaryLevel && ball.getY() > screenWidth * 0.7;
             if (timeToScary) {
                 scary();
-                intent.putExtra(Constants.EVENT_TYPE, GameEvents.SCARED.toString());
-                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                Intent scaredEvent = new Intent(GameEvents.SCARED.toString());
+                LocalBroadcastManager.getInstance(context).sendBroadcast(scaredEvent);
                 defaultBackgroundColor.setColor(Color.BLACK);
                 return true;
             } else if (ballInMaze != isDotInsideMaze()) {
                 if (ballInMaze) {
-                    intent.putExtra(Constants.EVENT_TYPE, GameEvents.BALL_LEFT_MAZE.toString());
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    Intent ballLeftMazeEvent = new Intent(GameEvents.BALL_LEFT_MAZE.toString());
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(ballLeftMazeEvent);
                     if (Constants.GAME_MODE_EASY.equals(gameMode)) {
                         defaultBackgroundColor.setColor(Color.parseColor("#660000"));
                     }
@@ -113,11 +111,9 @@ public class MazeGame implements Callable<Boolean>, SensorEventListener, Game {
         }
         if (isLevelCompleted()) {
             setLevel(currentLevel + 1);
-            intent.putExtra(Constants.EVENT_TYPE, GameEvents.LEVEL_DONE.toString());
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            Intent levelDoneIntent = new Intent(GameEvents.LEVEL_DONE.toString());
+            LocalBroadcastManager.getInstance(context).sendBroadcast(levelDoneIntent);
         }
-        ball.reset();
-        draw();
         return true;
     }
 
@@ -126,14 +122,10 @@ public class MazeGame implements Callable<Boolean>, SensorEventListener, Game {
      */
     @Override
     public void start() {
+        ball.reset();
         run = true;
         ball.setTime(System.nanoTime());
         threadResult = threadPoolExecutorService.submit(this);
-        if (scaryLevel == currentLevel) {
-            Intent intent = new Intent(Constants.GAME_EVENT);
-            intent.putExtra(Constants.EVENT_TYPE, GameEvents.SCARED_LEVEL_STARTS.toString());
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-        }
     }
 
     /**
@@ -141,6 +133,12 @@ public class MazeGame implements Callable<Boolean>, SensorEventListener, Game {
      */
     @Override
     public void reset() {
+        setLevel(1);
+        resetLevel();
+    }
+
+    @Override
+    public void pause() {
         run = false;
         if (threadResult != null) {
             try {
@@ -151,10 +149,6 @@ public class MazeGame implements Callable<Boolean>, SensorEventListener, Game {
                 e.printStackTrace();
             }
         }
-        setLevel(1);
-        ball.reset();
-        draw();
-        context.stopService(new Intent(context, RecorderService.class));
     }
 
 
@@ -163,17 +157,9 @@ public class MazeGame implements Callable<Boolean>, SensorEventListener, Game {
      */
     @Override
     public void resetLevel() {
-        run = false;
-        if (threadResult != null) {
-            try {
-                threadResult.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-        //no need to redraw wince thread will draw the last frame.
+        pause();
+        ball.reset();
+        draw();
     }
 
 
@@ -192,6 +178,16 @@ public class MazeGame implements Callable<Boolean>, SensorEventListener, Game {
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
         }
+    }
+
+    @Override
+    public boolean isGameInProgress() {
+        return currentLevel > 1;
+    }
+
+    @Override
+    public boolean isScaryLevel() {
+        return scaryLevel == currentLevel;
     }
 
     @Override
@@ -218,6 +214,7 @@ public class MazeGame implements Callable<Boolean>, SensorEventListener, Game {
         return false;
     }
 
+    @Override
     public void setGameSettings(SharedPreferences sharedPref) {
         ballPositionCalculator.gameSettingsChanged(Float.valueOf(sharedPref.getString("prefComplexityLevel", "1")),
                 Float.valueOf(sharedPref.getString("prefWallsBounceLevel", "0.5")));

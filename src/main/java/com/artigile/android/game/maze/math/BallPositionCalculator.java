@@ -32,8 +32,6 @@ public class BallPositionCalculator {
             timeDelta = 0;
         }
         ball.setTime(System.nanoTime());
-        accelerationX *= -1;
-        accelerationY *= -1;
 
         ball = checkForZeroSpeed(ball);
         accelerationX = calculateAcceleration(ball.getVelocityX(), accelerationX);
