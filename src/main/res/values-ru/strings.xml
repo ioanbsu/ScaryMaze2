@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Напугай друга</string>
+    <string name="enter_name">Введите имя:</string>
+    <string name="restart_game">Начать заново</string>
+    <string name="start_game">Начать</string>
+
+
+    <!--tutorial-->
+    <string name="welcome1_text">Добро пожаловать в игру \"Напугай друга\".</string>
+    <string name="tutorial_page_1">Это не настоящая игра. Она лишь предназначена для того, чтобы удивить или испугать ваших друзей. Игра записывает видео играющего.</string>
+    <string name="tutorial_page_2">Отключить запись видео можно в настройках. Для этого дотронтесь до экрана и ждите пока не увидите меню.</string>
+    <string name="tutorial_take_to_the_game_button">Начать</string>
+    <string name="tutorial_swipe_next">Далее(протяните экран влево)</string>
+
+    <!--settings-->
+    <string name="scary_maze_settings_activity_title">Настройки</string>
+    <string name="settings_link">Настройки</string>
+    <string name="settings_context_menu_text">Настройки</string>
+
+    <!--videos-->
+    <string name="videos_menu_text">Видео</string>
+
+    <!--game-->
+    <string name="end_game_message">Приносим извинения что напугали вас. Надеюсь вы получили удовольствие от прохождения
+        этой игры. Игра не настоящая и ее суть была лишь в том чтобы напугать вдивить вас. Нажмите на экран и держите
+        пока не появится меню где можно посмотреть видео.</string>
+    <string name="game_end_close_button">Закрыть</string>
+
+
+
+    <string name="continue_game">Продолжить</string>
+    <string name="well_done_continue_text">Отлично!</string>
+    <string name="failed_label">Неудача :(</string>
+    <string name="try_again_button">Попробовать еще раз</string>
+    <string name="restart_button">Начать заново</string>
+    <string name="videos_list">Видео</string>
+    <string name="play_again">Вернуться в игру</string>
+</resources>

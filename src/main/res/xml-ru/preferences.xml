@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+            android:title="Настройки Игры"
+            android:key="game_settings">
+        <EditTextPreference
+                android:title="Страшный уровень"
+                android:summary="Уровень где вылазит страшное лицо со страшным хвуком. От 2 до 10."
+                android:defaultValue="2"
+                android:inputType="numberDecimal"
+                android:key="prefScaryLevel"/>
+        <ListPreference
+                android:key="prefComplexityLevel"
+                android:entries="@array/gameLevel"
+                android:defaultValue="1"
+                android:summary="Выберите уровень сложности"
+                android:entryValues="@array/gameLevelValues"
+                android:title="Сложность" />
+        <ListPreference
+                android:key="prefWallsBounceLevel"
+                android:entries="@array/wallsBounce"
+                android:defaultValue="0.5"
+                android:summary="Настройте как сильно мяч отскакивает от стне"
+                android:entryValues="@array/wallsBounceLevel"
+                android:title="Отскок от стен" />
+        <ListPreference
+                android:key="prefGameMode"
+                android:entries="@array/gameMode"
+                android:defaultValue="RESTART"
+                android:summary="Выберите режим игры"
+                android:entryValues="@array/gameModeValue"
+                android:title="Режим игры" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="Другие"
+            android:key="other_settings">
+        <CheckBoxPreference
+                android:key="prefRecordVideo"
+                android:title="Запись видео"
+                android:summary="Включить/выключить записать видео"
+                android:defaultValue="true"/>
+        <CheckBoxPreference
+                android:key="prefDisplayTutorial"
+                android:title="Показывать информацию о том как пользоваться игрой"
+                android:summary="При запуске показывать инструкцию либо переходить непосредственно к самой игре"
+                android:defaultValue="true"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>
