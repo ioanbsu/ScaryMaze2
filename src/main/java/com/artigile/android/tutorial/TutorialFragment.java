@@ -24,8 +24,8 @@ public class TutorialFragment extends Fragment {
     private ImageView ivImage;
     private LinearLayout nextPageImg;
     private TextView textView;
-    private Integer imageId;
-    private Integer textId;
+    private Integer imageId = R.drawable.game_preview;
+    private Integer textId = R.string.tutorial_page_1;
     private Bitmap myBitmap;
     private Button goToGameButton;
     private boolean displayNextPageImg = true;

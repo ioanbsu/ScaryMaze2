@@ -22,11 +22,15 @@ public class FileUtils {
         if (mediaStorageDir == null) return null;
         // Create a media file name
         File mediaFile;
-        String filePath = mediaStorageDir.getPath() + File.separator + "/" + "blablabla".replace(" ", "_")
-                + SimpleDateFormat.getDateTimeInstance().format(new Date()) + ".mpeg";
-        filePath = filePath.replace(" ", "_").replace(",", "_").replace(":", "_");
-        mediaFile = new File(filePath);
+        int i = 1;
 
+        do {
+            String filePath = mediaStorageDir.getPath() + File.separator + "/" + SimpleDateFormat.getDateInstance().format(new Date()) + "-" + i + ".mpeg";
+            filePath = filePath.replace(" ", "_").replace(",", "_").replace(":", "_");
+            mediaFile = new File(filePath);
+            i++;
+        }
+        while (mediaFile.exists());
         return mediaFile;
     }
 

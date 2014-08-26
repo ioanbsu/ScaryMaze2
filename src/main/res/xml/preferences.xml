@@ -5,22 +5,22 @@
             android:title="Game Settings"
             android:key="game_settings">
         <EditTextPreference
-                android:title="Scary Level"
-                android:summary="Level where scary face appears"
+                android:title="Scary Level(2-10)"
+                android:summary="Level where scary face appears. Min. 2, max. 10."
                 android:defaultValue="2"
                 android:inputType="numberDecimal"
                 android:key="prefScaryLevel"/>
         <ListPreference
                 android:key="prefComplexityLevel"
                 android:entries="@array/gameLevel"
-                android:defaultValue="2"
+                android:defaultValue="1"
                 android:summary="Adjust game complexity "
                 android:entryValues="@array/gameLevelValues"
                 android:title="Complexity" />
         <ListPreference
                 android:key="prefWallsBounceLevel"
                 android:entries="@array/wallsBounce"
-                android:defaultValue="2"
+                android:defaultValue="0.5"
                 android:summary="Define walls softness"
                 android:entryValues="@array/wallsBounceLevel"
                 android:title="Walls Bounce" />

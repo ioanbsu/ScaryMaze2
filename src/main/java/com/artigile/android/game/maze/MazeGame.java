@@ -48,7 +48,7 @@ public class MazeGame implements Callable<Boolean>, Game {
     private boolean ballInMaze = true;
 
     //game configuration/settings
-    private int scaryLevel = 3;
+    private int scaryLevel = 2;
     private int screenHeight, screenWidth;
     private String gameMode = Constants.GAME_MODE_EASY;
 
@@ -218,7 +218,7 @@ public class MazeGame implements Callable<Boolean>, Game {
     public void setGameSettings(SharedPreferences sharedPref) {
         ballPositionCalculator.gameSettingsChanged(Float.valueOf(sharedPref.getString("prefComplexityLevel", "1")),
                 Float.valueOf(sharedPref.getString("prefWallsBounceLevel", "0.5")));
-        scaryLevel = Integer.valueOf(sharedPref.getString("prefScaryLevel", "3"));
+        scaryLevel = Integer.valueOf(sharedPref.getString("prefScaryLevel", "2"));
         gameMode = sharedPref.getString("prefGameMode", Constants.GAME_MODE_EASY);
     }
 

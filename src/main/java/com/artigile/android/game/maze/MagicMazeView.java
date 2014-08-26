@@ -36,7 +36,7 @@ public class MagicMazeView extends GameView implements SurfaceHolder.Callback {
     @Override
     public void startGame() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean recordVideo = sharedPref.getBoolean("prefRecordVideo", false);
+        boolean recordVideo = sharedPref.getBoolean("prefRecordVideo", true);
         if (mazeGame.isScaryLevel() && recordVideo) {
             Intent recordIntent = new Intent(context, RecorderService.class);
             recordIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
