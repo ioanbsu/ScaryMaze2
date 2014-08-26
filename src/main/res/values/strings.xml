@@ -9,8 +9,6 @@
 
     <!--tutorial-->
     <string name="welcome1_text">Welcome to Scary Maze Game.</string>
-    <string name="welcome1_description1">This is not a real game, but a joke</string>
-    <string name="welcome1_description2">that is suppose to scary the person who is playing.</string>
     <string name="tutorial_page_1">This is not real maze game. Please beware that this game scares player. This game records a video while player is playing.</string>
     <string name="tutorial_page_2">You can disable video recording in settings. To open game settings touch screen and wait until you see settings menu</string>
     <string name="tutorial_take_to_the_game_button">Take me to the game</string>
