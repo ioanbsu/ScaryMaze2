@@ -26,6 +26,6 @@ dependencies {
     compile "com.android.support:support-v4:20.0.+",
             "com.google.guava:guava:17.0-rc2",
             "com.android.support:appcompat-v7:20+",
-            "com.google.android.gms:play-services:5.2+"
+            "com.google.android.gms:play-services:5.0+"
 
 }
