@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyDashes">
+    <integer name="ga_sessionTimeout">300</integer>
+
+    <!-- Enable automatic Activity measurement -->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!-- The screen names that will appear in reports -->
+    <screenName name="com.artigile.android.game.GameActivity">
+        Main Game Activity
+    </screenName>
+    <screenName name="com.artigile.android.tutorial.TutorialActivity">
+        Tutorial Activity
+    </screenName>
+    <screenName name="com.artigile.android.game.VideosActivity">
+        Videos Activity
+    </screenName>
+    <screenName name="com.artigile.android.preferences.ScaryMazePreferencesActivity">
+        Settings Activity
+    </screenName>
+    <string name="ga_trackingId">UA-54220306-2</string>
+</resources>

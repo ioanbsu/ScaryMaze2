@@ -16,9 +16,11 @@ import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import com.artigile.android.MazeApp;
 import com.artigile.android.R;
 import com.artigile.android.game.maze.MagicMazeView;
 import com.artigile.android.preferences.ScaryMazePreferencesActivity;
+import com.google.android.gms.analytics.HitBuilders;
 
 /**
  * @author ivanbahdanau
@@ -153,6 +155,12 @@ public class GameActivity extends FragmentActivity {
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 displayPopup(PopupType.NONE);
                 magicMazeView.startGame();
+                ((MazeApp) getApplication()).getTracker().send(new HitBuilders.EventBuilder()
+                        .setCategory("Game Event")
+                        .setAction("Game Started")
+                        .setLabel("By clicking on start button")
+                        .setValue(1)
+                        .build());
             }
         });
         findViewById(R.id.continueGameButton).setOnClickListener(new View.OnClickListener() {
