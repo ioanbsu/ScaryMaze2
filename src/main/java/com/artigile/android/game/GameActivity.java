@@ -244,6 +244,13 @@ public class GameActivity extends FragmentActivity {
                                 .show();
                     }
                 }, 5000);
+
+                ((MazeApp) getApplication()).getTracker().send(new HitBuilders.EventBuilder()
+                        .setCategory("Game Event")
+                        .setAction("Scared")
+                        .setLabel("User had been scared")
+                        .setValue(1)
+                        .build());
             }
         };
     }
