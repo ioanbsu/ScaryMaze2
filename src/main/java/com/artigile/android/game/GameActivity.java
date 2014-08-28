@@ -229,7 +229,7 @@ public class GameActivity extends FragmentActivity {
         return new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-//                soundPool.play(soundId, 1, 1, 99999, 0, 1);
+                soundPool.play(soundId, 1, 1, 99999, 0, 1);
                 ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(1000);
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
