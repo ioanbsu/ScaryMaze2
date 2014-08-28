@@ -52,6 +52,7 @@ public class TutorialFragment extends Fragment {
             }
         });
         setDataInViewPager();
+        setRetainInstance(true);
         return rootView;
     }
 
@@ -64,10 +65,7 @@ public class TutorialFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (myBitmap != null) {
-            myBitmap.recycle();
-            myBitmap = null;
-        }
+
     }
 
 
@@ -109,9 +107,6 @@ public class TutorialFragment extends Fragment {
     private void displayImage() {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        if (imageId == null) {
-            imageId = R.drawable.game_preview;
-        }
         myBitmap = BitmapFactory.decodeResource(getResources(), imageId,
                 options);
         if (options.outWidth > 3000 || options.outHeight > 2000) {

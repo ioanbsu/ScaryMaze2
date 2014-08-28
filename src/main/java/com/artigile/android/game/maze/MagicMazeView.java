@@ -88,6 +88,7 @@ public class MagicMazeView extends GameView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        mazeGame.setScreenSize(width, height);
     }
 
     @Override

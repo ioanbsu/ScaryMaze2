@@ -1,6 +1,5 @@
 package com.artigile.android.game;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.artigile.android.FullScreenUtil;
 import com.artigile.android.R;
 
 import java.io.File;
@@ -19,6 +19,7 @@ import java.util.*;
 public class VideosActivity extends ListActivity {
 
     private ArrayAdapter<File> listAdapter;
+    public static final String TAG = "VideosActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,12 @@ public class VideosActivity extends ListActivity {
         });
         listAdapter = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1, files);
         setListAdapter(listAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FullScreenUtil.toggleHideyBar(getWindow(), TAG);
     }
 
     @Override

@@ -7,9 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.LinearLayout;
+import com.artigile.android.FullScreenUtil;
 import com.artigile.android.R;
 import com.google.common.collect.Lists;
 
@@ -21,6 +19,7 @@ import java.util.ArrayList;
 public class TutorialActivity extends FragmentActivity {
     private ArrayList<Integer> imagesId = Lists.newArrayList();
     private ArrayList<Integer> textsIds = Lists.newArrayList();
+    private static final String TAG = "tutorialActivity";
 
     /**
      * The number of pages (wizard steps) to show in this demo.
@@ -57,6 +56,12 @@ public class TutorialActivity extends FragmentActivity {
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
         mPager.setAdapter(mPagerAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FullScreenUtil.toggleHideyBar(getWindow(), TAG);
     }
 
     @Override

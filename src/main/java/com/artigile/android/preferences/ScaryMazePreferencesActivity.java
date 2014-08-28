@@ -8,6 +8,7 @@ import android.preference.PreferenceActivity;
  */
 public class ScaryMazePreferencesActivity extends PreferenceActivity {
 
+    public static final String TAG = "ScaryMazePreferencesActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -15,4 +16,5 @@ public class ScaryMazePreferencesActivity extends PreferenceActivity {
                 .replace(android.R.id.content, new ScaryMazePreferencesFragment())
                 .commit();
     }
+
 }

@@ -71,7 +71,7 @@ public class MazeGame implements Callable<Boolean>, Game {
         ballPositionCalculator.screenSizeChanged(screenHeight, screenWidth);
         maze = MazeBuilder.getLabirint1(screenHeight, screenWidth, currentLevel);
         scaryFaceBitmap = Bitmap.createScaledBitmap(scaryFaceBitmap, screenWidth, screenHeight, false);
-
+        draw();
     }
 
     /**
