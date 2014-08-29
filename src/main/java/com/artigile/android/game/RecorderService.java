@@ -7,6 +7,8 @@ import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.os.IBinder;
 import android.util.Log;
+import com.artigile.android.MazeApp;
+import com.google.android.gms.analytics.HitBuilders;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,23 +63,32 @@ public class RecorderService extends Service {
     private void startRecording() {
         System.out.println("STARTING RECORDING=================================");
         if (!isRecording) {
-            if (prepareVideoRecorder()) {
-                try {
+            try {
+                if (prepareVideoRecorder()) {
                     mMediaRecorder.start();
                     isRecording = true;
-                } catch (RuntimeException e) {
-                    isRecording = false;
+                } else {
                     releaseMediaRecorder();
                 }
-            } else {
+            } catch (RuntimeException e) {
+                isRecording = false;
                 releaseMediaRecorder();
+                ((MazeApp) getApplication()).getTracker().send(new HitBuilders.EventBuilder()
+                        .setCategory("Video record exception")
+                        .setAction("Video recording failed")
+                        .setLabel(e.getMessage())
+                        .setValue(1)
+                        .build());
             }
+
         }
     }
 
 
     private boolean prepareVideoRecorder() {
-        configureCamera();
+        if (!configureCamera()) {
+            return false;
+        }
         mMediaRecorder = new MediaRecorder();
 
         // Step 1: Unlock and set camera to MediaRecorder
@@ -161,7 +172,7 @@ public class RecorderService extends Service {
         }
     }
 
-    private void configureCamera() {
+    private boolean configureCamera() {
         int mCameraId = -1;
 
         try {//if API >=9 then we try to get info from CameraInfo)
@@ -188,8 +199,10 @@ public class RecorderService extends Service {
             }
         } catch (Exception e) {
             // Camera is not available (in use or does not exist)
+            return false;
         }
         camera = c;
+        return true;
     }
 
     private void releaseMediaRecorder() {

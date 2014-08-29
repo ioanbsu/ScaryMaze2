@@ -1,9 +1,10 @@
-package com.artigile.android.game.maze.model;
+package com.artigile.android.game.commonmodel;
 
 /**
  * @author ivanbahdanau
  */
-public class Ball {
+public class Ball implements HasTimeModel {
+
 
     private int radius = 40;
 
@@ -65,11 +66,12 @@ public class Ball {
         this.radius = radius;
     }
 
+
     public void reset() {
-        x = radius;
-        y = radius;
-        velocityX = 0;
-        velocityY = 0;
-        time = 0;
+        setX(getRadius());
+        setY(getRadius());
+        setVelocityX(0);
+        setVelocityY(0);
+        setTime(0);
     }
 }

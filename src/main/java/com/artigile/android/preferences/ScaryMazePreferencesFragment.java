@@ -19,8 +19,7 @@ public class ScaryMazePreferencesFragment extends PreferenceFragment {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 try {
                     Integer value = Integer.valueOf(newValue + "");
-                    return value > 1 && value < 10;
-
+                    return value > 1 && value < 11;
                 } catch (Exception e) {
                     return false;
                 }

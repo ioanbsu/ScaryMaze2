@@ -1,11 +1,11 @@
 package com.artigile.android.game.maze.math;
 
-import com.artigile.android.game.maze.model.Ball;
+import com.artigile.android.game.maze.model.MazeBall;
 
 /**
  * @author ivanbahdanau
  */
-public class BallPositionCalculator {
+public class MazeBallPositionCalculator {
 
     public static final int MAX_VELOCITY = 500;
 
@@ -26,7 +26,7 @@ public class BallPositionCalculator {
         this.screenHeight = screenHeight;
     }
 
-    public Ball calculatePosition(Ball ball, float accelerationX, float accelerationY) {
+    public MazeBall calculatePosition(MazeBall ball, float accelerationX, float accelerationY) {
         float timeDelta = (System.nanoTime() - ball.getTime()) / MICROSECONDS_IN_SEC * 20 * complexity;
         if (timeDelta / MICROSECONDS_IN_SEC > 1) { //in case there were some big delay we don't conut it.
             timeDelta = 0;
@@ -69,7 +69,7 @@ public class BallPositionCalculator {
         this.wallsSoftness = wallsSoftness;
     }
 
-    private Ball checkForZeroSpeed(Ball ball) {
+    private MazeBall checkForZeroSpeed(MazeBall ball) {
         if (Math.abs(ball.getVelocityX()) < MIN_VELOCITY) {
             ball.setVelocityX(0);
         }

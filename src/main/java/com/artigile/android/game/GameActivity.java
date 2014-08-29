@@ -4,14 +4,12 @@ import android.app.AlertDialog;
 import android.content.*;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
@@ -29,7 +27,7 @@ import com.google.android.gms.analytics.HitBuilders;
 public class GameActivity extends FragmentActivity {
     public static final String TAG = "GameActivity";
 
-    private GameView magicMazeView;
+    private AbstractGameView magicMazeView;
     private LinearLayout startPanel;
     private LinearLayout continuePanel;
     private LinearLayout gameFailPanel;
@@ -82,7 +80,7 @@ public class GameActivity extends FragmentActivity {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         magicMazeView.setGameSettings(sharedPref);
         FullScreenUtil.toggleHideyBar(getWindow(),TAG);
-        if (magicMazeView.isGameInProgress()) {
+        if (magicMazeView.isGameAheadLevel1()) {
             displayPopup(PopupType.CONTINUTE_GAME);
         } else {
             resetGame();
