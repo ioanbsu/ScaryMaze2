@@ -80,7 +80,6 @@ public class RecorderService extends Service {
                         .setValue(1)
                         .build());
             }
-
         }
     }
 
@@ -133,6 +132,7 @@ public class RecorderService extends Service {
         // Step 6: Prepare configured MediaRecorder
         try {
             mMediaRecorder.prepare();
+            Thread.sleep(1000);
         } catch (IllegalStateException e) {
             Log.d(TAG, "IllegalStateException preparing MediaRecorder: " + e.getMessage());
             releaseMediaRecorder();
@@ -141,6 +141,8 @@ public class RecorderService extends Service {
             Log.d(TAG, "IOException preparing MediaRecorder: " + e.getMessage());
             releaseMediaRecorder();
             return false;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         return true;
     }

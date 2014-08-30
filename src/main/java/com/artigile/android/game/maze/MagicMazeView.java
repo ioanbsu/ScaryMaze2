@@ -12,9 +12,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextPaint;
 import android.view.SurfaceHolder;
 import com.artigile.android.R;
+import com.artigile.android.game.AbstractGameView;
 import com.artigile.android.game.Constants;
 import com.artigile.android.game.GameEvents;
-import com.artigile.android.game.AbstractGameView;
 import com.artigile.android.game.RecorderService;
 import com.artigile.android.game.maze.math.MazeBallPositionCalculator;
 import com.artigile.android.game.maze.model.MazeBall;
@@ -111,6 +111,9 @@ public class MagicMazeView extends AbstractGameView implements SurfaceHolder.Cal
                 Float.valueOf(sharedPref.getString("prefWallsBounceLevel", "0.5")));
         scaryLevel = Integer.valueOf(sharedPref.getString("prefScaryLevel", "2"));
         gameMode = sharedPref.getString("prefGameMode", Constants.GAME_MODE_EASY);
+        if (scaryLevel < currentLevel) {
+            currentLevel = scaryLevel;
+        }
     }
 
     @Override

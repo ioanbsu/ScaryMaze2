@@ -8,7 +8,6 @@
               android:background="@drawable/start_game_custom_background"
               android:layout_centerHorizontal="true"
               android:gravity="center"
-              android:visibility="gone"
               android:id="@+id/gameContinuePanel">
 
     <TextView

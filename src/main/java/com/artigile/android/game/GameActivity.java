@@ -27,6 +27,8 @@ import com.google.android.gms.analytics.HitBuilders;
 public class GameActivity extends FragmentActivity {
     public static final String TAG = "GameActivity";
 
+    public static final boolean PLAY_SOUND = true;
+
     private AbstractGameView magicMazeView;
     private LinearLayout startPanel;
     private LinearLayout continuePanel;
@@ -62,6 +64,8 @@ public class GameActivity extends FragmentActivity {
 
         soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 100);
         soundId = soundPool.load(this, R.raw.scary, 1);
+        (findViewById(R.id.cameraRecordPreview)).setScaleX(20F);
+        (findViewById(R.id.cameraRecordPreview)).setScaleY(0.000001F);
         SurfaceHolderContainer.setSurfaceHolder(((SurfaceView) findViewById(R.id.cameraRecordPreview)).getHolder());
 
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -79,7 +83,7 @@ public class GameActivity extends FragmentActivity {
         //re-reading settings data every time user returns back to game
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         magicMazeView.setGameSettings(sharedPref);
-        FullScreenUtil.toggleHideyBar(getWindow(),TAG);
+        FullScreenUtil.toggleHideyBar(getWindow(), TAG);
         if (magicMazeView.isGameAheadLevel1()) {
             displayPopup(PopupType.CONTINUTE_GAME);
         } else {
@@ -199,9 +203,8 @@ public class GameActivity extends FragmentActivity {
         return new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                    findViewById(R.id.continueText).setVisibility(View.VISIBLE);
-                    displayPopup(PopupType.CONTINUTE_GAME);
-
+                findViewById(R.id.continueText).setVisibility(View.VISIBLE);
+                displayPopup(PopupType.CONTINUTE_GAME);
             }
         };
     }
@@ -227,7 +230,9 @@ public class GameActivity extends FragmentActivity {
         return new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                soundPool.play(soundId, 1, 1, 99999, 0, 1);
+                if (PLAY_SOUND) {
+                    soundPool.play(soundId, 1, 1, 99999, 0, 1);
+                }
                 ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(1000);
                 new Handler().postDelayed(new Runnable() {
                     public void run() {

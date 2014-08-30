@@ -34,6 +34,7 @@ public class FileUtils {
         return mediaFile;
     }
 
+
     public static File getMagicMazeVideosDir() {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
