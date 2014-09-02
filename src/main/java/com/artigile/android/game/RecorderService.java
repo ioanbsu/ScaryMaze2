@@ -73,11 +73,9 @@ public class RecorderService extends Service {
             } catch (RuntimeException e) {
                 isRecording = false;
                 releaseMediaRecorder();
-                ((MazeApp) getApplication()).getTracker().send(new HitBuilders.EventBuilder()
-                        .setCategory("Video record exception")
-                        .setAction("Video recording failed")
-                        .setLabel(e.getMessage())
-                        .setValue(1)
+                ((MazeApp) getApplication()).getTracker("Recorder Service").send(new HitBuilders.ExceptionBuilder()
+                        .setFatal(false)
+                        .setDescription(e.getMessage())
                         .build());
             }
         }

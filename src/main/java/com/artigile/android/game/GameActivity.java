@@ -158,7 +158,7 @@ public class GameActivity extends FragmentActivity {
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 displayPopup(PopupType.NONE);
                 magicMazeView.startGame();
-                ((MazeApp) getApplication()).getTracker().send(new HitBuilders.EventBuilder()
+                ((MazeApp) getApplication()).getTracker("Start Game").send(new HitBuilders.EventBuilder()
                         .setCategory("Game Event")
                         .setAction("Game Started")
                         .setLabel("By clicking on start button")
@@ -249,7 +249,7 @@ public class GameActivity extends FragmentActivity {
                     }
                 }, 5000);
 
-                ((MazeApp) getApplication()).getTracker().send(new HitBuilders.EventBuilder()
+                ((MazeApp) getApplication()).getTracker("Scary Face").send(new HitBuilders.EventBuilder()
                         .setCategory("Game Event")
                         .setAction("Scared")
                         .setLabel("User had been scared")

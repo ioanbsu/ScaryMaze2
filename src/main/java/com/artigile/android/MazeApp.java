@@ -18,11 +18,12 @@ public class MazeApp extends Application{
     }
 
 
-    public synchronized Tracker getTracker() {
+    public synchronized Tracker getTracker(String screenName) {
         if (tracker == null) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             tracker = analytics.newTracker(R.xml.global_tracker);
         }
+        tracker.setScreenName(screenName);
         return tracker;
     }
 }

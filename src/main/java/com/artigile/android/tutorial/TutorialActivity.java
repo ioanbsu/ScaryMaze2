@@ -8,7 +8,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import com.artigile.android.FullScreenUtil;
+import com.artigile.android.MazeApp;
 import com.artigile.android.R;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -62,6 +64,11 @@ public class TutorialActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         FullScreenUtil.toggleHideyBar(getWindow(), TAG);
+        ((MazeApp) getApplication()).getTracker("Tutorial").send(new HitBuilders.EventBuilder()
+                .setCategory("App Event")
+                .setAction("Tutorial displayed")
+                .setValue(1)
+                .build());
     }
 
     @Override
